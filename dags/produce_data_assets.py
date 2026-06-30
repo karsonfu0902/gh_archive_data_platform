@@ -1,7 +1,7 @@
 import os
 import logging
 import requests
-from datatime import datetime, timedelta
+from datetime import datetime, timedelta
 from airflow.decorators import dag, task
 from airflow.assets import Asset
 from airflow.models import Variable
