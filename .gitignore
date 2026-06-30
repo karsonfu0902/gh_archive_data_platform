@@ -1,0 +1,17 @@
+# Local Cluster State & Automated Scripts
+*.sh
+!install_airflow.sh
+!upgrade_airflow.sh
+
+# Container / Local Storage Mounts
+k8s/secrets/
+tmp/
+.idea/
+.vscode/
+
+# Python Virtual Environments & OS Artifacts
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.venv

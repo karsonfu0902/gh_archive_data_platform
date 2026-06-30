@@ -1,0 +1,31 @@
+images:
+  airflow:
+    repository: my-dags
+    tag: 0.0.1
+    pullPolicy: Never
+
+config:
+  core:
+    load_examples: 'False'
+    logging_level: 'INFO'
+
+executor: 'CeleryExecutor'
+
+logs:
+  persistence:
+    enabled: true
+    existingClaim: airflow-logs-pvc
+
+dags:
+  gitSync:
+    enabled: true
+    repo: https://github.com/karsonfu/gh_archive_data_platform.git
+    branch: main
+    subPath: "dags"
+    wait: 30   
+    recommendedProbeSetting: true
+
+logs:
+  persistence:
+    enabled: true
+    existingClaim: airflow-logs-pvc
