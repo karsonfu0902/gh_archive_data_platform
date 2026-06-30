@@ -35,10 +35,11 @@ def gh_archive_ingestion_pipeline():
         """
 
         logical_time = context["data_interval_start"]
-        year = logical_time.strftime("%Y")
-        month = logical_time.strftime("%m")
-        day = logical_time.strftime("%d")
-        hour = str(logical_time.hour)
+        target_time = logical_time - timedelta(hours=2) 
+        year = target_time.strftime("%Y")
+        month = target_time.strftime("%m")
+        day = target_time.strftime("%d")
+        hour = str(target_time.hour)
 
         filename = f"{year}-{month}-{day}-{hour}.json.gz"
         source_url = f"https://data.gharchive.org/{filename}"
