@@ -19,10 +19,10 @@ logs:
 dags:
   gitSync:
     enabled: true
-    repo: https://github.com/karsonfu/gh_archive_data_platform.git
+    repo: https://github.com/karsonfu0902/gh_archive_data_platform.git
     branch: main
     subPath: "dags"
-    wait: 30   
+    wait: 30
     recommendedProbeSetting: true
 
 logs:
