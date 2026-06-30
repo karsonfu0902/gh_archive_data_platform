@@ -17,7 +17,7 @@ with DAG(
     dag_id='gh_archive_medallion_orchestrator',
     default_args=default_args,
     description='Triggers the Databricks Fan-Out Medallion Pipeline hourly',
-    schedule_interval='@hourly',  # Aligns with the GH Archive raw file release frequency
+    schedule='@hourly',  # Aligns with the GH Archive raw file release frequency
     start_date=datetime(2026, 1, 1),
     catchup=False,
     tags=['production', 'databricks', 'lakehouse'],
