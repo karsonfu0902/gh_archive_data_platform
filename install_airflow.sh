@@ -16,6 +16,9 @@ helm repo update
 
 kubectl create namespace ${NAMESPACE} || true
 
+kubectl apply -f k8s/volumes/airflow-logs-pv.yaml
+kubectl apply -f k8s/volumes/airflow-logs-pvc.yaml
+
 helm install airflow apache-airflow/airflow \
     --namespace ${NAMESPACE} \
     --values chart/values-override.yaml \
