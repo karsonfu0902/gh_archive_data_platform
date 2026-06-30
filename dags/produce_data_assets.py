@@ -1,6 +1,6 @@
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 import requests
 from airflow.decorators import dag, task
@@ -22,7 +22,12 @@ gh_archive_asset = Asset(f"{GH_ARCHIVE_BUCKET}/raw/gh_archive")
     tags=["ingestion", "gh_archive"],
 )
 def gh_archive_ingestion_pipeline():
-    @task(outlets=[gh_archive_asset], task_id="fetch_hourly_gh_events")
+    @task(
+            outlets=[gh_archive_asset],
+            task_id="fetch_hourly_gh_events",
+            retries=3,
+            retry_delay=timedelta(minutes=10),
+    )
     def fetch_hourly_gh_events(**context):
         """
         Calculate the logical execution window, download the GH Archive file,
