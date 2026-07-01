@@ -203,8 +203,11 @@ Example output:
 
 
 
+## Pipeline in Action
 
-That is the kind of workload this architecture is intended to support: reliable ingestion, governed transformations, and analyst-friendly data products.
+Here is a look at the successful orchestration of the ingestion and transformation pipelines within the Airflow UI:
+
+![Successful Airflow DAG Runs](assets/successful_dag_runs.png)
 
 ## Contact
 
