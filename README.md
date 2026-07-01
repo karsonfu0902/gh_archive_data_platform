@@ -51,7 +51,7 @@ This project is strongest where it demonstrates real data engineering tradeoffs 
 - Fixed an Airflow container permission issue in a kind-based Kubernetes environment by adjusting host-path permissions so the scheduler and DAG processor could write logs.
 - Replaced local clock-based file selection with Airflow’s execution context so the pipeline uses deterministic scheduling and avoids race conditions with upstream file publication.
 - Added defensive skip handling for delayed or missing GH Archive files, which prevents transient 404s from being treated as hard failures.
-- Designed the workflow around 3 medallion layers and 4 downstream analytical marts, with hourly ingestion and a 2-hour offset to align with GH Archive publication timing.
+- Designed the workflow around 3 medallion layers and 4 downstream analytical mart tables, with hourly ingestion and a 2-hour offset to align with GH Archive publication timing.
 - Implemented checkpointed streaming-style processing so new files can be processed incrementally rather than forcing full reprocessing.
 - Used Unity Catalog-managed tables as the foundation for governed data assets, with an eye toward access control, schema enforcement, and lineage as the platform matures.
 - Wired the deployment flow around a lightweight container build path in the CI/CD folder so the Airflow image can be rebuilt and loaded into the local cluster as part of the environment setup.
