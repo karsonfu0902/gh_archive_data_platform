@@ -15,12 +15,114 @@ The pipeline is designed around a practical production workflow:
 
 ```mermaid
 flowchart LR
-    A[GH Archive API] --> B[Airflow Ingestion DAG]
-    B --> C[S3 Raw Zone]
-    C --> D[Databricks Bronze]
-    D --> E[Databricks Silver]
-    E --> F[Databricks Gold]
-    F --> G[Analytics Marts]
+
+    %% Class Definitions for Visual Accents
+
+    classDef git fill:#24292e,stroke:#fff,stroke-width:1px,color:#fff;
+
+    classDef k8s fill:#326ce5,stroke:#fff,stroke-width:1px,color:#fff;
+
+    classDef aws fill:#ff9900,stroke:#fff,stroke-width:1px,color:#000;
+
+    classDef databricks fill:#ff4f00,stroke:#fff,stroke-width:1px,color:#fff;
+
+    classDef box fill:#f6f8fa,stroke:#d1d5db,stroke-width:1px,color:#000;
+
+
+
+    %% PART 3: SOURCE & DEPLOYMENT MANAGEMENT
+
+    subgraph GitHub_SCM ["📁 Part 3: GitHub / SCM Plane"]
+
+        direction LR
+
+        A1["Databricks Notebooks <br> (.py Code)"]:::git
+
+        A2["Airflow DAG Repo <br> & Configs"]:::git
+
+    end
+
+
+
+    %% PART 2: LOCAL ORCHESTRATION PLANE
+
+    subgraph Local_Infra ["☸️ Part 2: Local Orchestration (Kubernetes / 'kind')"]
+
+        direction TB
+
+        subgraph Airflow_Core ["Apache Airflow Cluster (CeleryExecutor)"]
+
+            C1["Git-Sync Sidecar <br> Container"]:::box
+
+            C2["Airflow Scheduler & <br> DAG Processor"]:::box
+
+            
+
+            subgraph K8s_Pods ["Ephemeral Worker Pods"]
+
+                D1["Ingestion Task <br> (HTTP Ingest)"]:::k8s
+
+                D2["Trigger Task <br> (Databricks Operator)"]:::k8s
+
+            end
+
+        end
+
+    end
+
+
+
+    %% PART 1: CLOUD DATA PLANE
+
+    subgraph Cloud_Data ["❄️ Part 1: AWS & Databricks Cloud Plane"]
+
+        direction TB
+
+        E1[("AWS S3 Bucket <br> (Raw JSON Landing Point)")]:::aws
+
+        
+
+        subgraph Databricks_Lakehouse ["Databricks Workspace (Spark Compute)"]
+
+            F1["Bronze Tier <br> (Auto Loader Stream)"]:::databricks
+
+            F2["Silver Tier <br> (Deduplicated Enriched)"]:::databricks
+
+            F3["Gold Tier <br> (Analytical Marts)"]:::databricks
+
+        end
+
+        G1[["Unity Catalog <br> (gh_archive_lakehouse_dev)"]]:::box
+
+    end
+
+
+
+    %% PIPELINE INTERACTIONS & CONNECTIONS
+
+    %% Development / Deployment Cycle
+
+    A1 -->|Syncs Code Changes| Databricks_Lakehouse
+
+    A2 -->|Live Code Poll| C1
+
+    C1 -->|Hot-Reloads Volume| C2
+
+    C2 -->|Spawns Pod Tasks| K8s_Pods
+
+
+
+    %% Live Pipeline Execution Flow
+
+    D1 -->|1. Fetch & Stream Raw JSON| E1
+
+    D2 -->|2. Trigger Workflow API Call| Databricks_Lakehouse
+
+    E1 -->|3. Read Incremental Checkpoints| F1
+
+    F1 --> F2 --> F3
+
+    G1 -.->|Governs Tables & Access| Databricks_Lakehouse
 ```
 
 The deployment also uses Kubernetes, Helm, and Git Sync so DAG updates can flow from GitHub into the Airflow environment without rebuilding container images.
