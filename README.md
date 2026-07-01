@@ -191,17 +191,16 @@ A typical downstream question for this platform would be:
 
 ```sql
 SELECT *
-FROM mart_top_repos
-LIMIT 3;
+FROM mart_human_bot_count;
 ```
 
 Example output:
 
-| repo_name | count |
+| user_type | count |
 | --- | --- |
-| otrieu1082/db-backup | 89617 |
-| dabsanddollars2024-cpu/basani-data | 85320 |
-| ishashwatt/LeetSync | 69160 |
+| bot | 3023058 |
+| human | 11880985 |
+
 
 
 
